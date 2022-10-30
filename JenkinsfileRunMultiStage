@@ -14,25 +14,25 @@ node{
     
  
      stage('Build Docker Image'){
-        sh 'docker build -t caolos/maven-web-app -f MultiStageDockerfile .' 
+        sh 'docker build -t landcaolos/maven-web-app -f MultiStageDockerfile .' 
     }
     
     stage('Push Docker Image'){
         withCredentials([string(credentialsId: 'Dockerhub', variable: 'Dockerhub')]) {
-          sh "docker login -u caolos -p ${Dockerhub}"
+          sh "docker login -u landcaolos -p ${Dockerhub}"
         }
-        sh 'docker push caolos/maven-web-app'
+        sh 'docker push landcaolos/maven-web-app'
      }
        stage('Run Docker Image In container'){   //In Dev Server
          sh  'docker stop maven-web-app || true'
          sh 'docker rm  maven-web-app || true'
         
-        sh 'docker run  -d -p 8087:8080 --name maven-web-app caolos/maven-web-app'
+        sh 'docker run  -d -p 8087:8080 --name maven-web-app landcaolos/maven-web-app'
        }
        
         stage('Run Docker Image In Dev Server'){
         
-        def dockerRun = 'docker run  -d -p 8087:8080 --name maven-web-app caolos/maven-web-app'
+        def dockerRun = 'docker run  -d -p 8087:8080 --name maven-web-app landcaolos/maven-web-app'
          
          sshagent(['docker-credentials']) {
           sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.18.219 docker stop maven-web-app || true'
